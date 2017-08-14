@@ -7,10 +7,10 @@
 @main(Messages("newUser.form")){
   <h2>@Messages("newUser.form")</h2>
 
-  @form(CSRF(routes.UserController.save())){
+  @form(routes.UserController.save()){
     <fieldset>
       <legend>
-      @Messages("user.details", Messages("user.new"))
+      @Messages("products.details", Messages("products.new"))
       </legend>
       @inputText(userForm("name"))
       @inputText(userForm("email"))

@@ -7,6 +7,8 @@ user.new.command = New
 user.new.submit = Add
 user.new.success = Successfully added user {0}
 
+game.options = Select game options
+
 validation.errors = Please correct the errors in the form.
 validation.email.duplicate = A user with this email already exists
 

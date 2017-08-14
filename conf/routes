@@ -13,15 +13,23 @@ GET     /message                    controllers.AsyncController.message
 #list all users
 GET     /users                      controllers.UserController.list
 
-#add a user to the database
+#   add a user to the database
 POST    /users                      controllers.UserController.save
 
-#create a new user
+#   create a new user
 GET     /users/register             controllers.UserController.registerUser
 
-#find a user by email address
+#   find a user by email address
 GET     /users/:email               controllers.UserController.show(email)
 
+#   list all current games
+GET     /games                      controllers.AdminController.list
+
+#   add a game to the database
+POST     /games                     controllers.AdminController.save
+
+#   create a new game instance
+GET     /games/new                  controllers.AdminController.create
 
 
 # Map static resources from the /public folder to the /assets URL path

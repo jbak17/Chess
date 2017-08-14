@@ -1,0 +1,15 @@
+@import services.Game
+
+@(games: List[Game])(implicit messages: MessagesProvider)
+
+@main("Games"){
+  <ul class="games">
+  @for( game <- games ){
+    <li>
+      <h3>@game.black</h3>
+      <p>@game.white</p>
+      <p>@game.created</p>
+    </li>
+  }
+  </ul>
+}

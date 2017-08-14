@@ -4,20 +4,33 @@
  * two arguments, a `String` for the title of the page and an `Html`
  * object to insert into the body of the page.
  *@
-@(title: String)(content: Html)
+@(title: String)(content: Html)(implicit messages: MessagesProvider)
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
         @* Here's where we render the page title `String`. *@
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
-        <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
+        <title>@Messages("application.name")</title>
+            <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+            <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+            <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </head>
     <body>
-        @* And here's where we render the `Html` object containing
-         * the page content. *@
-        @content
+
+        <div id="header">
+            <h1>Chess</h1>
+        </div>
+        @tags.navigation()
+        <div id="contents" class="container">
+            @* And here's where we render the `Html` object containing
+            * the page content. *@
+            @content
+        </div>
+        <footer>
+            <p>UNE COSC360: Advanced Web Programming - Jarrod Baker 2017</p>
+        </footer>
     </body>
 </html>

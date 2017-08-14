@@ -1,14 +1,15 @@
 package services
 
-import controllers.UserController
-
-
 case class User (
                 name: String,
                 email: String,
                 games: List[Game] = List(), //@todo change this to 'game'
                 record: (Int, Int, Int) = (0,0,0) //win - loss - draw
-                )
+                ){
+  override def toString: String = {
+    s"$name:   W:${record._1} L:${record._2} D:${record._3}"
+  }
+}
 
 case class NU(name: String, email: String)
 

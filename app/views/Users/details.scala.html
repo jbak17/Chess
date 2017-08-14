@@ -1,6 +1,7 @@
 @import services.User
 
-@(users: List[User])
+@(users: List[User])(implicit messages: MessagesProvider)
+
 
 
 @main("Users"){
