@@ -9,5 +9,20 @@ GET     /count                      controllers.CountController.count
 # An example controller showing how to write asynchronous code
 GET     /message                    controllers.AsyncController.message
 
+
+#list all users
+GET     /users                      controllers.UserController.list
+
+#add a user to the database
+POST    /users                      controllers.UserController.save
+
+#create a new user
+GET     /users/register             controllers.UserController.registerUser
+
+#find a user by email address
+GET     /users/:email               controllers.UserController.show(email)
+
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

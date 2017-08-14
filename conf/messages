@@ -1,0 +1,13 @@
+application.name = Chess with Friends
+
+
+user.form = User details
+user.new = (new)
+user.new.command = New
+user.new.submit = Add
+user.new.success = Successfully added user {0}
+
+validation.errors = Please correct the errors in the form.
+validation.email.duplicate = A user with this email already exists
+
+

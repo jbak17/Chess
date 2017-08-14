@@ -1,0 +1,20 @@
+@(userForm: Form[services.NU])(implicit messages: MessagesProvider, flash: Flash, r: RequestHeader)
+
+@import helper._
+
+
+
+@main(Messages("newUser.form")){
+  <h2>@Messages("newUser.form")</h2>
+
+  @form(CSRF(routes.UserController.save())){
+    <fieldset>
+      <legend>
+      @Messages("user.details", Messages("user.new"))
+      </legend>
+      @inputText(userForm("name"))
+      @inputText(userForm("email"))
+      </fieldset>
+    <p><input type="submit" class="btn-primary" value='@Messages("user.new.submit")'></p>
+  }
+}

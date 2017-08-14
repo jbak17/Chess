@@ -57,7 +57,7 @@ class King(color: Char, loc: Square) extends ChessPiece {
     )
 
     //filter out occupied squares
-
+    val notOccupied: List[Square] = moves.diff(game.currentBoard)
     //filter out squares in check
     moves
 

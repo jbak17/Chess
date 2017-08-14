@@ -1,0 +1,15 @@
+@import services.User
+
+@(users: List[User])
+
+
+@main("Users"){
+    <ul class="users">
+    @for( user <- users ){
+        <li>
+            <h3>@user.name</h3>
+            <p>@user.email</p>
+        </li>
+    }
+    </ul>
+}
