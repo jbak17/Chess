@@ -1,18 +1,16 @@
-@import services.User
+@import model._
 
-@(users: List[User])(implicit messages: MessagesProvider)
+@(user: UserInstance)(implicit messages: MessagesProvider)
 
 
 
 @main("Users"){
   <ul class="users">
-  @for( user <- users ){
+
     <dt>@user.toString</dt>
     @for(g <- user.games){
       <dd>@g</dd>
     }
-  }
   </ul>
-
-}
+  }
 

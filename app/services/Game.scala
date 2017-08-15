@@ -13,26 +13,30 @@
 
 package services
 
+
+import javax.inject.{Inject, Singleton}
+
+import model.UserInstance
 import org.joda.time.DateTime
 
 case class Game (
-                white: User,
-                black: User,
-                timeWhite: DateTime = new DateTime(),
-                timeBlack: DateTime = new DateTime(),
-                currentBoard: List[ChessPiece] = List(),
-                moveHistory: List[Square] = List(),
-                created: DateTime = DateTime.now()
+                  white: UserInstance,
+                  black: UserInstance,
+                  timeWhite: DateTime = new DateTime(),
+                  timeBlack: DateTime = new DateTime(),
+                  currentBoard: List[ChessPiece] = List(),
+                  moveHistory: List[Square] = List(),
+                  created: DateTime = DateTime.now()
                 )
-
-object Game {
+@Singleton
+class GameService @Inject () (userService: UserService) {
 
   //sample data for testing functions
   var savedGames: Set[Game]= Set(
-    Game(User.listUsers.head, User.listUsers.tail.head),
-    Game(User.listUsers.head, User.listUsers.tail.head),
-    Game(User.listUsers.head, User.listUsers.tail.head),
-    Game(User.listUsers.head, User.listUsers.tail.head),
+    Game(userService.listUsers.head, userService.listUsers.tail.head),
+    Game(userService.listUsers.head, userService.listUsers.tail.head),
+    Game(userService.listUsers.head, userService.listUsers.tail.head),
+    Game(userService.listUsers.head, userService.listUsers.tail.head),
     )
 
   /*
@@ -53,7 +57,7 @@ object Game {
 
   }
 
-  def showGameByUser(user: User): List[Game] = {
+  def showGameByUser(user: UserInstance): List[Game] = {
 
     savedGames.toList.filter( g => g.black == user || g.white == user)
 

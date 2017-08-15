@@ -16,18 +16,17 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import org.joda.time.DateTime
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.MessagesApi
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.twirl.api.Html
-import services.{Game, User}
+import services.{GameService}
 
 case class gameData(player1: String, player2: String, startTime: Int, increment: Int)
 
 @Singleton
-class AdminController @Inject()(cc: ControllerComponents, messagesApi: MessagesApi) extends AbstractController(cc) with play.api.i18n.I18nSupport {
+class AdminController @Inject()(cc: ControllerComponents, messagesApi: MessagesApi, Game: GameService) extends AbstractController(cc) with play.api.i18n.I18nSupport {
 
   def index = Action { implicit request =>
     val input: Html =  Html.apply("<h1>Welcome</h1>")
@@ -39,7 +38,7 @@ class AdminController @Inject()(cc: ControllerComponents, messagesApi: MessagesA
     Ok(views.html.Users.login(null))
   }
 
-  
+
   def list = Action { implicit request =>
     val games = Game.list
     Ok(views.html.gameIndex(games))

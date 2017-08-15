@@ -1,6 +1,7 @@
 package controllers
 
 import services._
+import model._
 import javax.inject._
 
 import play.api.data.Form
@@ -11,10 +12,10 @@ import play.api.mvc.Flash
 import play.api.i18n._
 
 @Singleton
-class UserController @Inject()(cc: ControllerComponents, messagesApi: MessagesApi) extends AbstractController(cc) with play.api.i18n.I18nSupport {
+class UserController @Inject()(cc: ControllerComponents, messagesApi: MessagesApi, userService: UserService) extends AbstractController(cc) with play.api.i18n.I18nSupport {
 
   def list = Action { implicit request =>
-    val users: List[User] = User.listUsers
+    val users: List[UserInstance] = userService.listUsers
     Ok(views.html.Users.userList(users))
   }
 
@@ -22,10 +23,12 @@ class UserController @Inject()(cc: ControllerComponents, messagesApi: MessagesAp
   @brief used to show a single user
  */
   def show(email: String) = Action { implicit request =>
-    val user: Option[User] = Option(User.getUserByEmail(email).head)
-    user.map { u =>
-      Ok(views.html.Users.details(List(u)))
-    }.getOrElse(NotFound)
+    val user: UserInstance = userService.getUserByEmail(email)
+    if(user.isInstanceOf[UserInstance]) {
+      Ok(views.html.Users.details(user))
+    } else
+      Ok(views.html.Users.notFound())
+
   }
 
   /*
@@ -34,8 +37,8 @@ class UserController @Inject()(cc: ControllerComponents, messagesApi: MessagesAp
   private val newUserForm = Form(
     mapping(
       "name" -> nonEmptyText,
-      "email" -> email.verifying(
-        "validation.email.duplicate", User.getUserByEmail(_).isEmpty)
+      "email" -> email//.verifying(
+        //"validation.email.duplicate", email => userService.userAlreadyExists(email))
     )(NU.apply)(NU.unapply)
   )
 
@@ -58,11 +61,12 @@ class UserController @Inject()(cc: ControllerComponents, messagesApi: MessagesAp
 
     newUser.fold(
       hasErrors = {form =>
+        print("Problem with user form")
         Redirect(routes.UserController.registerUser).flashing(Flash(form.data) + ("error" -> Messages("validation.user.errors")))
       },
       success = { newUser =>
-        val user: User = User(newUser.name, newUser.email)
-        User.createUser(user)
+        val user: UserInstance = UserInstance(newUser.name, newUser.email)
+        userService.saveUser(user)
         Redirect(routes.UserController.list).
           flashing("success" -> Messages("message"))
       }

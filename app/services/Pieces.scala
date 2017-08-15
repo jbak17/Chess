@@ -14,8 +14,9 @@ case class Square(R: Int,C: Int){
 trait ChessPiece {
 
   val colour: Char
-  val captured: Boolean
   val location: Square
+
+  assert(colour == 'b' || colour == 'w')
 
   /*
   @brief returns updated piece at newLocation
@@ -27,15 +28,33 @@ trait ChessPiece {
    */
   def validMove(game: Game): List[Square]
 
+  /*
+  @brief filters the possible moves to remove the squares
+  occupied by own side.
+  @param moves list of valid moves for this piece
+  @param game current list of pieces on board
+  @return list of moves this pieces can make
+   */
+  def filterOccupied(moves: List[Square], game: List[ChessPiece]): List[Square] = {
+    //filter out occupied squares
+    moves.diff(ownPieces(game))
   }
 
+  /*
+  @brief Get a list of squares occupied by the opposition
+   */
+  def oppositionPieces(game: List[ChessPiece]): List[ChessPiece] = game.filterNot(p => p.colour == this.colour)
 
+  /*
+  @brief
+   */
+  def ownPieces(game: List[ChessPiece]): List[ChessPiece] = game.filter(p => p.colour == this.colour)
 
+}
 
 class King(color: Char, loc: Square) extends ChessPiece {
 
   val inCheck: Boolean = false
-  val captured: Boolean = false
   val colour: Char = color
   val location: Square = loc
 
@@ -56,13 +75,104 @@ class King(color: Char, loc: Square) extends ChessPiece {
       Square(location.R + 1, location.C + 1) // right and down
     )
 
-    //filter out occupied squares
-    val notOccupied: List[Square] = moves.diff(game.currentBoard)
     //filter out squares in check
-    moves
+    filterOccupied(moves, game.currentBoard)
 
   }
 }
+
+class Pawn(color: Char, loc: Square) extends ChessPiece {
+
+  val colour: Char = color
+  val location: Square = loc
+  val advance: Int = if (colour == 'w') 1 else -1
+
+  def move(newLocation: Square): ChessPiece = new Pawn(this.colour, newLocation)
+
+  def validMove(game: Game): List[Square] = {
+    //list all possible moves
+    var moves = List(
+      //row is up and down; column left and right
+      Square(location.R + advance, location.C) //up
+    )
+    //if pawn hasn't moved from starting position
+    if(colour =='w' && location.R == 2){
+      moves = Square(location.R + 2, location.C) :: moves
+    } else if (colour =='b' && location.R == 7) {
+      moves = Square(location.R - 2, location.C) :: moves
+    }
+    //test for capture opportunities
+    val captures = List(
+      Square(location.R + advance, location.C - 1),
+      Square(location.R + advance, location.C + 1))
+
+    //filter out squares in check
+    val capSquare = captures diff filterOccupied(moves, game.currentBoard)
+
+    capSquare ::: moves
+  }
+}
+
+class Rook(color: Char, loc: Square) extends ChessPiece {
+
+  val colour: Char = color
+  val location: Square = loc
+
+  def move(newLocation: Square): ChessPiece = new Rook(this.colour, newLocation)
+  /*
+  @brief calculates a list of valid moves
+   */
+  def validMove(game: Game): List[Square] = ???
+
+}
+
+class Knight (color: Char, loc: Square) extends ChessPiece {
+  val colour: Char = color
+  val location: Square = loc
+
+  def move(newLocation: Square): ChessPiece = new Knight(this.colour, newLocation)
+
+  def validMove(game: Game): List[Square] = {
+    //row is up and down; column left and right
+    val moves = List(
+      Square(location.R+2, location.C-1), //up left
+      Square(location.R+1, location.C-2), //left up
+      Square(location.R-1, location.C-2), //left down
+      Square(location.R-2, location.C-1), //down left
+      Square(location.R+2, location.C+1), //up right
+      Square(location.R+1, location.C+2), //right up
+      Square(location.R-1, location.C+2), //right down
+      Square(location.R-2, location.C+1), //down right
+    )
+
+    //make sure we don't clash with our own pieces
+    moves diff ownPieces(game.currentBoard)
+  }
+
+
+}
+
+class Bishop (color: Char, loc: Square) extends ChessPiece {
+  val colour: Char = color
+  val location: Square = loc
+
+  def move(newLocation: Square): ChessPiece = new Bishop(this.colour, newLocation)
+
+  def validMove(game: Game): List[Square] = ???
+
+}
+
+class Queen (color: Char, loc: Square) extends ChessPiece {
+  val colour: Char = color
+  val location: Square = loc
+
+  def move(newLocation: Square): ChessPiece = new Queen(this.colour, newLocation)
+
+  def validMove(game: Game): List[Square] = ???
+
+
+}
+
 
 
 object ChessPiece {
