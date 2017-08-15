@@ -1,0 +1,19 @@
+@import services.User
+
+@(users: List[User])(implicit messages: MessagesProvider)
+
+
+
+@main("Users"){
+    <ul class="users">
+    @for( user <- users ){
+        <li>
+            <a href="@controllers.routes.UserController.show(user.email)">
+                <button type="button" class="btn" href=>@user.name</button>
+            </a>
+        </li>
+    }
+    </ul>
+
+}
+

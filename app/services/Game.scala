@@ -38,7 +38,7 @@ object Game {
   /*
 @brief Create a new user
  */
-  def createGame(game: Game): Unit = {
+  def saveGame(game: Game): Unit = {
 
     savedGames = savedGames + game
 

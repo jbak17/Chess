@@ -9,7 +9,11 @@ user.new.success = Successfully added user {0}
 
 game.options = Select game options
 
-validation.errors = Please correct the errors in the form.
+validation.user.errors = Please correct the errors in the form.
 validation.email.duplicate = A user with this email already exists
+
+resources.jquery = https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
+resources.bootstrap = https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js
+resources.bootstrapcss = https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css
 
 

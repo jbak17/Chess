@@ -5,12 +5,14 @@
 
 
 @main("Users"){
-    <ul class="users">
-    @for( user <- users ){
-        <li>
-            <h3>@user.name</h3>
-            <p>@user.email</p>
-        </li>
+  <ul class="users">
+  @for( user <- users ){
+    <dt>@user.toString</dt>
+    @for(g <- user.games){
+      <dd>@g</dd>
     }
-    </ul>
+  }
+  </ul>
+
 }
+

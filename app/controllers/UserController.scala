@@ -15,7 +15,7 @@ class UserController @Inject()(cc: ControllerComponents, messagesApi: MessagesAp
 
   def list = Action { implicit request =>
     val users: List[User] = User.listUsers
-    Ok(views.html.Users.details(users))
+    Ok(views.html.Users.userList(users))
   }
 
   /*
@@ -58,7 +58,7 @@ class UserController @Inject()(cc: ControllerComponents, messagesApi: MessagesAp
 
     newUser.fold(
       hasErrors = {form =>
-        Redirect(routes.UserController.registerUser).flashing(Flash(form.data) + ("error" -> Messages("validation.errors")))
+        Redirect(routes.UserController.registerUser).flashing(Flash(form.data) + ("error" -> Messages("validation.user.errors")))
       },
       success = { newUser =>
         val user: User = User(newUser.name, newUser.email)

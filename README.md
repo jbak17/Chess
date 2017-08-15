@@ -1,13 +1,41 @@
-[<img src="https://img.shields.io/travis/playframework/play-scala-starter-example.svg"/>](https://travis-ci.org/playframework/play-scala-starter-example)
 
-# play-scala-starter-example
+# Chess application for COSC360
 
-This is a starter application that shows how Play works.  Please see the documentation at https://www.playframework.com/documentation/latest/Home for more details.
+This application was developed for COSC360. This readme is relevant for the first
+submission step focusing on backend development. 
+
+The app will work by a user creating an account. They will then have the option of 
+either creating a new game or continuing a previous, unfinished game. The
+new game option will take them to an options page where they can select
+their settings and invite a friend to play. 
+
+If the friend is registered they will get an invitation linking them to the game. If
+the friend isn't registered the app will ask them to be signed up before joining
+a game. 
+
+The game will be rendered on the front end, with the back end providing support to say 
+how pieces can move, keeping track of the game, etc. The two-player version will
+communicate over a web socket. Each move will be sent to the server, with a revised 
+game state sent to the client. I considered writing the game in JavaScript, but 
+decided against it as this way if the connection is interrupted the game data is 
+preserved.
+ 
+Currently users can register, see their current games, and create a new game. Most of
+the backend is in place for the logic of the game. The early front end has been put
+together using bootstrap.
+
+Moving forward: 
+I need to complete the frontend interface to the game, improve the visuals of the
+application, implement the web socket, and finish up the game logic to make sure
+that all the moves are legal, etc. 
+
+I plan to use React and TypeScript for the client-side. 
+
+## The plumbing:
 
 ## Running
 
-Run this using [sbt](http://www.scala-sbt.org/).  If you downloaded this project from http://www.playframework.com/download then you'll find a prepackaged version of sbt in the project directory:
-
+Run this using [sbt](http://www.scala-sbt.org/). 
 ```
 sbt run
 ```
@@ -20,38 +48,30 @@ There are several demonstration files available in this template.
 
 - HomeController.scala:
 
-  Shows how to handle simple HTTP requests.
+  Handles the landing page
+  
+- UserController.scala:
+  User sign-in, registration, etc.
+  
+- AdminController.scala:
+  Creates new game instances
 
-- AsyncController.scala:
-
-  Shows how to do asynchronous programming when handling a request.
-
-- CountController.scala:
-
-  Shows how to inject a component into a controller and use the component when
-  handling requests.
 
 ## Components
 
-- Module.scala:
+- User API
+Functions to create and update users
 
-  Shows how to use Guice to bind all the components needed by your application.
+- Game API
+Create and save games
+Make changes to games: add moves, etc.
 
-- Counter.scala:
+- Pieces API
+Each piece (King, Queen, ...) is implemented as a class which extends 
+the ChessPiece trait. Every piece will have a color and location, as well as a method
+to move. 
 
-  An example of a component that contains state, in this case a simple counter.
+- Notation API
+Can be given a piece and a move and return standard chess notation.
 
-- ApplicationTimer.scala:
 
-  An example of a component that starts when the application starts and stops
-  when the application stops.
-
-## Filters
-
-- Filters.scala:
-
-  Creates the list of HTTP filters used by your application.
-
-- ExampleFilter.scala
-
-  A simple filter that adds a header to every response.
