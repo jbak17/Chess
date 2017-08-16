@@ -22,6 +22,7 @@ import org.joda.time.DateTime
 case class Game (
                   white: UserInstance,
                   black: UserInstance,
+                  _id: Long = new java.util.Random().nextLong(),
                   timeWhite: DateTime = new DateTime(),
                   timeBlack: DateTime = new DateTime(),
                   currentBoard: List[ChessPiece] = List(),

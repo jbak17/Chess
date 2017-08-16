@@ -1,5 +1,7 @@
 package services
 
+import scala.annotation.tailrec
+
 /*
 @brief represent locations on a chess board, eg A1, F6
  */
@@ -49,6 +51,67 @@ trait ChessPiece {
   @brief
    */
   def ownPieces(game: List[ChessPiece]): List[ChessPiece] = game.filter(p => p.colour == this.colour)
+
+  /*
+  @brief helper to check we're still on the board.
+   */
+  def inRange(int: Int): Boolean = int <= 8 && int >= 1
+
+  /*
+  @brief calculate valid squares from a given position branching
+  out recursively in all four directions.
+   */
+  @tailrec
+  final def getSquaresFromDirection(direction: (Int, Int), game: Game, squares: List[Square] = List(this.location)): List[Square] = {
+
+    val opposition = oppositionPieces(game.currentBoard)
+
+    val newSquare = Square(squares.head.R + direction._1, squares.head.C + direction._2)
+
+    /* if opposition square, add to list and return.
+    if occupied to own color return list
+    if not occupied add square to list and continue branch.
+     */
+    if (!(inRange(newSquare.C) && inRange(newSquare.R))){
+      squares}
+    else if (opposition.contains(newSquare)){
+      newSquare :: squares
+    } else if (game.currentBoard.contains(newSquare)){
+      squares
+    } else {
+      getSquaresFromDirection(direction, game, newSquare :: squares)
+    }
+  }
+
+  /*
+  @brief get moves for pieces that move horizontally
+   */
+  def goHorizontal(game: Game): List[Square] = {
+
+    val directions = List((0,1), (0,-1), (1,0), (-1,0))
+
+    var moves: List[Square] = List()
+
+    for (d <- directions){
+      moves ::: getSquaresFromDirection(d, game)
+    }
+    moves
+  }
+
+  /*
+  @brief get moves for pieces that move diagonallu
+   */
+  def goDiagonal(game: Game): List[Square] = {
+
+    val directions = List((1,1), (-1,-1), (-1,1), (1,+1))
+
+    var moves: List[Square] = List()
+
+    for (d <- directions){
+      moves ::: getSquaresFromDirection(d, game)
+    }
+    moves
+  }
 
 }
 
@@ -122,7 +185,7 @@ class Rook(color: Char, loc: Square) extends ChessPiece {
   /*
   @brief calculates a list of valid moves
    */
-  def validMove(game: Game): List[Square] = ???
+  def validMove(game: Game): List[Square] = goHorizontal(game)
 
 }
 
@@ -158,7 +221,8 @@ class Bishop (color: Char, loc: Square) extends ChessPiece {
 
   def move(newLocation: Square): ChessPiece = new Bishop(this.colour, newLocation)
 
-  def validMove(game: Game): List[Square] = ???
+  def validMove(game: Game): List[Square] = goDiagonal(game)
+
 
 }
 
@@ -168,7 +232,7 @@ class Queen (color: Char, loc: Square) extends ChessPiece {
 
   def move(newLocation: Square): ChessPiece = new Queen(this.colour, newLocation)
 
-  def validMove(game: Game): List[Square] = ???
+  def validMove(game: Game): List[Square] = goDiagonal(game) ::: goHorizontal(game)
 
 
 }
