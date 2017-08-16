@@ -1,5 +1,7 @@
 package services
 
+import model.Game
+
 import scala.annotation.tailrec
 
 /*
@@ -18,7 +20,7 @@ trait ChessPiece {
   val colour: Char
   val location: Square
 
-  assert(colour == 'b' || colour == 'w')
+  //assert(colour == 'b' || colour == 'w')
 
   /*
   @brief returns updated piece at newLocation
@@ -242,6 +244,8 @@ class Queen (color: Char, loc: Square) extends ChessPiece {
 object ChessPiece {
 
   val board: List[Square] = (for (c <- 1 to 8; r <- 1 to 8) yield Square(c, r)).toList
+
+
 
 
 }

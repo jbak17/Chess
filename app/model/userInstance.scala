@@ -1,6 +1,6 @@
 package model
 
-import services.Game
+import Game
 
 import org.mongodb.scala.bson.ObjectId
 

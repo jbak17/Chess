@@ -16,12 +16,12 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
+import model.GameService
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.MessagesApi
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.twirl.api.Html
-import services.{GameService}
 
 case class gameData(player1: String, player2: String, startTime: Int, increment: Int)
 
