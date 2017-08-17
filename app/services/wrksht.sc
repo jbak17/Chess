@@ -1,42 +1,55 @@
-import model.Game
-import services.{ChessPiece, Pawn, Square}
+import services._
 
-val i: Int = 1
-val sq: Square = Square(1,1)
+def creatInitialBoard(): List[ChessPiece] = {
 
-val r = List(1,2,3,4,5,6,7,8)
-
-class Pawn(color: Char, loc: Square) extends ChessPiece {
-
-  val colour: Char = color
-  val location: Square = loc
-  val advance: Int = if (colour == 'w') 1 else -1
-
-  def move(newLocation: Square): ChessPiece = new Pawn(this.colour, newLocation)
-
-  def validMove(game: Game): List[Square] = {
-    //list all possible moves
-    var moves = List(
-      //row is up and down; column left and right
-      Square(location.R + advance, location.C) //up
-    )
-    //if pawn hasn't moved from starting position
-    if(colour =='w' && location.R == 2){
-      moves = Square(location.R + 2, location.C) :: moves
-    } else if (colour =='b' && location.R == 7) {
-      moves = Square(location.R - 2, location.C) :: moves
-    }
-    //test for capture opportunities
-    val captures = List(
-      Square(location.R + advance, location.C - 1),
-      Square(location.R + advance, location.C + 1))
-
-    //filter out squares in check
-    val capSquare = captures diff filterOccupied(moves, game.currentBoard)
-
-    capSquare ::: moves
+  def createPawns(): List[Pawn] = {
+    val r = List(1,2,3,4,5,6,7,8)
+    val blPawns: List[Pawn] = r.map(p => new Pawn('b', Square(7, p)))
+    val whPawns: List[Pawn] = r.map(p => new Pawn('w', Square(2, p)))
+    whPawns ::: blPawns
   }
+  def createRooks(): List[Rook] = {
+    val nums = List(1, 8)
+
+    val wrks = nums.map(x => new Rook('w', Square(1, x)))
+    val brks = nums.map(x => new Rook('b', Square(8, x)))
+
+    wrks ::: brks
+  }
+  def createKnights(): List[Knight] = {
+    val nums = List(2, 7)
+
+    val wrks = nums.map(x => new Knight('w', Square(1, x)))
+    val brks = nums.map(x => new Knight('b', Square(8, x)))
+
+    wrks ::: brks
+  }
+  def createBishops(): List[Bishop] = {
+    val nums = List(3, 5)
+
+    val wrks = nums.map(x => new Bishop('w', Square(1, x)))
+    val brks = nums.map(x => new Bishop('b', Square(8, x)))
+
+    wrks ::: brks
+  }
+  def createQueens(): List[Queen] = {
+
+    val white = new Queen('w', Square(1, 4))
+    val black = new Queen('b', Square(8, 4))
+
+    List(white, black)
+  }
+  def createKings(): List[King] = {
+
+    val white = new King('w', Square(1, 5))
+    val black = new King('b', Square(8, 5))
+
+    List(white, black)
+  }
+
+  var pieceList: List[ChessPiece] = List()
+  List(createPawns(), createRooks(), createKings(), createBishops(), createQueens(), createKings()).foldLeft(pieceList)(_ ::: _)
+
 }
 
-
-val blPawns: List[Pawn] = r.map(p => new Pawn('b', Square(7, p)))
+val test = creatInitialBoard()

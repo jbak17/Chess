@@ -39,9 +39,9 @@ trait ChessPiece {
   @param game current list of pieces on board
   @return list of moves this pieces can make
    */
-  def filterOccupied(moves: List[Square], game: List[ChessPiece]): List[Square] = {
+  def filterOccupiedByOwnColour(moves: List[Square], game: List[ChessPiece]): List[Square] = {
     //filter out occupied squares
-    moves.diff(ownPieces(game))
+    moves.filterNot(sq => ownPieces(game).contains(sq))
   }
 
   /*
@@ -50,14 +50,26 @@ trait ChessPiece {
   def oppositionPieces(game: List[ChessPiece]): List[ChessPiece] = game.filterNot(p => p.colour == this.colour)
 
   /*
-  @brief
+  @brief return a list of pieces of same color as player
    */
   def ownPieces(game: List[ChessPiece]): List[ChessPiece] = game.filter(p => p.colour == this.colour)
+
+  /*
+  @brief create a list of squares occupied by same player
+  @return Squares occupied by current player
+   */
+  def ownSquares(pieces: List[ChessPiece]): List[Square] = ownPieces(pieces).map(p => p.location)
 
   /*
   @brief helper to check we're still on the board.
    */
   def inRange(int: Int): Boolean = int <= 8 && int >= 1
+
+  /*
+  @brief filter list of squares to remove those outside of board
+   */
+  def onBoard(squares: List[Square]): List[Square] = squares.filter(p => inRange(p.C) && inRange(p.R))
+
 
   /*
   @brief calculate valid squares from a given position branching
@@ -141,7 +153,7 @@ class King(color: Char, loc: Square) extends ChessPiece {
     )
 
     //filter out squares in check
-    filterOccupied(moves, game.currentBoard)
+    filterOccupiedByOwnColour(moves, game.currentBoard)
 
   }
 }
@@ -150,6 +162,7 @@ class Pawn(color: Char, loc: Square) extends ChessPiece {
 
   val colour: Char = color
   val location: Square = loc
+
   val advance: Int = if (colour == 'w') 1 else -1
 
   def move(newLocation: Square): ChessPiece = new Pawn(this.colour, newLocation)
@@ -171,10 +184,12 @@ class Pawn(color: Char, loc: Square) extends ChessPiece {
       Square(location.R + advance, location.C - 1),
       Square(location.R + advance, location.C + 1))
 
-    //filter out squares in check
-    val capSquare = captures diff filterOccupied(moves, game.currentBoard)
+    //check potential capture squares are occupied by opposition
+    val capSquare = captures.filter(sq => game.currentBoard.contains(sq))
+    val capSquareWithOpposition = capSquare.filter(sq => oppositionPieces(game.currentBoard).contains(sq))
 
-    capSquare ::: moves
+    //check all squares are on the board.
+    onBoard(capSquare ::: moves)
   }
 }
 
@@ -199,7 +214,7 @@ class Knight (color: Char, loc: Square) extends ChessPiece {
 
   def validMove(game: Game): List[Square] = {
     //row is up and down; column left and right
-    val moves = List(
+    val moves = onBoard(List(
       Square(location.R+2, location.C-1), //up left
       Square(location.R+1, location.C-2), //left up
       Square(location.R-1, location.C-2), //left down
@@ -208,10 +223,12 @@ class Knight (color: Char, loc: Square) extends ChessPiece {
       Square(location.R+1, location.C+2), //right up
       Square(location.R-1, location.C+2), //right down
       Square(location.R-2, location.C+1), //down right
-    )
+    ))
 
+    val own: List[Square] = ownSquares(game.currentBoard)
     //make sure we don't clash with our own pieces
-    moves diff ownPieces(game.currentBoard)
+    //moves.filter(x => ownPieces(game.currentBoard).contains(x))
+    moves.filterNot(own.contains(_))
   }
 
 

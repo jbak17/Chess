@@ -1,6 +1,6 @@
+@import services.GameService
 @import model.Game
-@@import model.Game
-(games: List[Game])(implicit messages: MessagesProvider)
+@(games: List[Game])(implicit messages: MessagesProvider)
 
 @main("Games"){
   <ul class="games">

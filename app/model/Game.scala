@@ -23,15 +23,17 @@ case class Game (
                   _id: Long = new java.util.Random().nextLong(),
                   timeWhite: DateTime = new DateTime(),
                   timeBlack: DateTime = new DateTime(),
-                  currentBoard: List[ChessPiece] = List(),
+                  currentBoard: List[ChessPiece] = Game.creatInitialBoard(),
                   moveHistory: List[String] = List(),
                   created: DateTime = DateTime.now()
-                ){
+                )
+
+object Game {
 
   /*Create a starting board with a full complement of
 black and white pieces
  */
-  def creatInitialBoard: List[ChessPiece] = {
+  def creatInitialBoard(): List[ChessPiece] = {
 
     def createPawns(): List[Pawn] = {
       val r = List(1,2,3,4,5,6,7,8)
@@ -78,10 +80,8 @@ black and white pieces
       List(white, black)
     }
 
-
-
-
-
+    var pieceList: List[ChessPiece] = List()
+    List(createPawns(), createRooks(), createKings(), createBishops(), createQueens(), createKnights()).foldLeft(pieceList)(_ ::: _)
 
   }
 

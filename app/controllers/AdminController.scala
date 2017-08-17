@@ -16,7 +16,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import model.GameService
+import services.GameService
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.MessagesApi

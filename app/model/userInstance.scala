@@ -1,7 +1,5 @@
 package model
 
-import Game
-
 import org.mongodb.scala.bson.ObjectId
 
 object UserInstance {
