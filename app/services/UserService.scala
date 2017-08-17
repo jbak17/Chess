@@ -1,35 +1,23 @@
 package services
 
-import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
 
 import model.UserInstance
-import org.mongodb.scala.{Completed, Document, MongoClient, MongoCollection, MongoDatabase, Observer}
+import org.mongodb.scala.{Completed, Document, MongoCollection, Observer}
 import org.mongodb.scala.model.Filters._
-import org.mongodb.scala.bson.codecs.Macros._
-import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
-import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 
-import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.language.postfixOps
-
-
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Await
-import scala.concurrent.duration.Duration
-
 
 @Singleton
 class UserService  @Inject () (mongoConnect: MongoConnect) {
 
+  val userCollection: MongoCollection[UserInstance] = mongoConnect.userdb.getCollection("users")
+
   val userList = ListBuffer.empty [ UserInstance ]
 
-  val userCodecRegistry = fromRegistries(fromProviders(classOf[UserInstance]), DEFAULT_CODEC_REGISTRY )
-
-  val mongoClient: MongoClient = MongoClient()
-  val database: MongoDatabase = mongoClient.getDatabase("chess").withCodecRegistry(userCodecRegistry)
-  val collection: MongoCollection[UserInstance] = database.getCollection("users")
 
   /*
   var users: Set[UserInstance] = Set(
@@ -45,7 +33,9 @@ class UserService  @Inject () (mongoConnect: MongoConnect) {
    */
   def saveUser(user: UserInstance): Unit = {
 
-    collection.insertOne(user).subscribe((C: Completed) => println("new person inserted"))
+    val newUser: Document = Document("name"->user.name, "email"->user.email)
+
+    userCollection.insertOne(user).subscribe((C: Completed) => println("new person inserted"))
 
   }
 
@@ -53,7 +43,7 @@ class UserService  @Inject () (mongoConnect: MongoConnect) {
   @brief return list of current users
    */
   def listUsers(): List[UserInstance] = {
-    val observable = collection.find()
+    val observable = userCollection.find()
 
     observable.subscribe( observer = new Observer[UserInstance] {
       override def onError(e: Throwable): Unit = {
@@ -80,7 +70,7 @@ class UserService  @Inject () (mongoConnect: MongoConnect) {
    */
   def getUserByEmail(email: String): UserInstance = {
 
-    val observable = collection.find(equal("email", email)).first()
+    val observable = userCollection.find(equal("email", email)).first()
 
     observable.subscribe( observer = new Observer[UserInstance] {
       override def onError(e: Throwable): Unit = {
@@ -106,7 +96,7 @@ class UserService  @Inject () (mongoConnect: MongoConnect) {
 
   def loadUsers(): Unit = {
 
-    val observable = collection.find()
+    val observable = userCollection.find()
 
     observable.subscribe( observer = new Observer[UserInstance] {
       override def onError(e: Throwable): Unit = {
@@ -127,5 +117,5 @@ class UserService  @Inject () (mongoConnect: MongoConnect) {
   }
 
   loadUsers()
-  print(userList)
+
 }

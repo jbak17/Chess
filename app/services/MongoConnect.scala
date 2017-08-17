@@ -1,11 +1,26 @@
 package services
 
 import com.google.inject.Singleton
-import org.mongodb.scala.{MongoClient, MongoDatabase}
+import javax.inject.Singleton
 
-@Singleton
+import model.{Game, UserInstance, testGame}
+import org.mongodb.scala.{Completed, MongoClient, MongoCollection, MongoDatabase, Observable, Observer}
+import org.mongodb.scala.bson.codecs.Macros._
+import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
+import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
+
+import scala.language.postfixOps
+
 class MongoConnect
 {
   final private val mongoClient = MongoClient ( "mongodb://localhost:27017/" )
-  final val mongod: MongoDatabase = mongoClient.getDatabase ( "chess" )
+
+  val gamesCodecRegistry = fromRegistries(fromProviders(classOf[Game]), DEFAULT_CODEC_REGISTRY )
+  val userCodecRegistry = fromRegistries(fromProviders(classOf[UserInstance]), DEFAULT_CODEC_REGISTRY )
+
+  final val userdb: MongoDatabase = mongoClient.getDatabase ( "chess" ).withCodecRegistry(userCodecRegistry)
+  final val chessdb: MongoDatabase = mongoClient.getDatabase ( "games" ).withCodecRegistry(gamesCodecRegistry)
+
+  val gameCollection: MongoCollection[Game] = chessdb.getCollection("gameInstances")
+
 }

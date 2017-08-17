@@ -17,6 +17,8 @@ package model
 import org.joda.time.DateTime
 import services._
 
+case class testGame(white: String, black: String)
+
 case class Game (
                   white: UserInstance,
                   black: UserInstance,
@@ -26,7 +28,11 @@ case class Game (
                   currentBoard: List[ChessPiece] = Game.creatInitialBoard(),
                   moveHistory: List[String] = List(),
                   created: DateTime = DateTime.now()
-                )
+                ){
+  override def toString: String = s"Time remaining white: ${this.timeWhite}\n" +
+    s"Time remaining black: ${this.timeWhite}\n" +
+    s"Current board: ${currentBoard.toString()}"
+}
 
 object Game {
 
@@ -92,6 +98,8 @@ black and white pieces
   @para   move:
    */
   def recordMove(gameID: Long, move: Int): Unit = ???
+
+
 
 
 }

@@ -9,8 +9,18 @@
 
     <dt>@user.toString</dt>
     @for(g <- user.games){
-      <dd>@g</dd>
+      <dd>Hello @g</dd>
     }
   </ul>
-  }
+
+  <div class="row">
+    <div class="col-sm-4" hidden="false"></div>
+    <div class="col-sm-4">
+      <button type="button" class="btn btn-success" href="#">New game</button>
+    </div>
+    <div class="col-sm-4" hidden="false"></div>
+  </div>
+
+
+}
 
