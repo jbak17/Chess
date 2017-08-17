@@ -1,6 +1,7 @@
 package services
 
 import model.Game
+import org.mongodb.scala.bson.collection.immutable.Document
 
 import scala.annotation.tailrec
 
@@ -19,6 +20,7 @@ trait ChessPiece {
 
   val colour: Char
   val location: Square
+  val kind: String //used to turn into Documents
 
   //assert(colour == 'b' || colour == 'w')
 
@@ -135,6 +137,8 @@ class King(color: Char, loc: Square) extends ChessPiece {
   val colour: Char = color
   val location: Square = loc
 
+  val kind: String = "King"
+
   def move(newLocation: Square): ChessPiece = new King(this.colour, newLocation)
 
   def validMove(game: Game): List[Square] = {
@@ -162,6 +166,8 @@ class Pawn(color: Char, loc: Square) extends ChessPiece {
 
   val colour: Char = color
   val location: Square = loc
+
+  val kind: String = "Pawn"
 
   val advance: Int = if (colour == 'w') 1 else -1
 
@@ -198,6 +204,8 @@ class Rook(color: Char, loc: Square) extends ChessPiece {
   val colour: Char = color
   val location: Square = loc
 
+  val kind: String = "Rook"
+
   def move(newLocation: Square): ChessPiece = new Rook(this.colour, newLocation)
   /*
   @brief calculates a list of valid moves
@@ -209,6 +217,9 @@ class Rook(color: Char, loc: Square) extends ChessPiece {
 class Knight (color: Char, loc: Square) extends ChessPiece {
   val colour: Char = color
   val location: Square = loc
+  val kind: String = "Knight"
+
+
 
   def move(newLocation: Square): ChessPiece = new Knight(this.colour, newLocation)
 
@@ -237,6 +248,7 @@ class Knight (color: Char, loc: Square) extends ChessPiece {
 class Bishop (color: Char, loc: Square) extends ChessPiece {
   val colour: Char = color
   val location: Square = loc
+  val kind: String = "Bishop"
 
   def move(newLocation: Square): ChessPiece = new Bishop(this.colour, newLocation)
 
@@ -248,6 +260,8 @@ class Bishop (color: Char, loc: Square) extends ChessPiece {
 class Queen (color: Char, loc: Square) extends ChessPiece {
   val colour: Char = color
   val location: Square = loc
+  val kind: String = "Queen"
+
 
   def move(newLocation: Square): ChessPiece = new Queen(this.colour, newLocation)
 

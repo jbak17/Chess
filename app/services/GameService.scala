@@ -7,7 +7,7 @@ import model.{Game, UserInstance}
 import org.mongodb.scala._
 
 import com.mongodb.async.client.{Observer, Subscription}
-import org.mongodb.scala.{Completed, Document, MongoCollection}
+import org.mongodb.scala.{Completed, Document}
 
 import scala.language.postfixOps
 
@@ -23,10 +23,10 @@ class GameService @Inject () (mongoConnect: MongoConnect) {
 
   //sample data for testing functions
   var savedGames: Set[Game]= Set(
-    Game(UserInstance("Juno", "juno@chess.com"), UserInstance("Arnold", "arnold@chess.com")),
-    Game(UserInstance("Samantha", "sam@chess.com"), UserInstance("Juno", "juno@chess.com")),
-    Game(UserInstance("Rose", "rose@chess.com"), UserInstance("Arnold", "arnold@chess.com")),
-    Game(UserInstance("Samantha", "sam@chess.com"), UserInstance("Rose", "rose@chess.com")),
+    Game("juno@chess.com", "arnold@chess.com"),
+    Game("sam@chess.com","juno@chess.com"),
+    Game("rose@chess.com","arnold@chess.com"),
+    Game("sam@chess.com","rose@chess.com")
   )
 
 
@@ -35,39 +35,10 @@ class GameService @Inject () (mongoConnect: MongoConnect) {
    */
   def saveGame(game: Game): Unit = {
 
-    //savedGames = savedGames + game
-    mongoConnect.gameCollection.insertOne(game).subscribe((C: Completed) => println("new game inserted"))
-
-/*
-    val observable: Observable[Completed] = mongoConnect.gameCollection.insertOne(game)
-
-    // Explictly subscribe to actually insert the name:
-    observable.subscribe(new Observer[Completed] {
-
-      override def onNext(result: Completed): Unit = println("New Game Inserted")
-
-      override def onSubscribe ( subscription: Subscription ): Unit = {}
-
-      override def onError(e: Throwable): Unit = println("Failed to insert game: " + e.getLocalizedMessage)
-
-      override def onComplete(): Unit = println("Game insert successful")
-    })
-    */
+    val newGame: Document = Document("white"->game.white, "black"->game.black, "board"->game.currentBoardtoDocument)
+    mongoConnect.gameCollection.insertOne(newGame).subscribe((C: Completed) => println("new game inserted"))
   }
 
-  val inObs: Observable[Completed] = mongoConnect.gameCollection.insertMany(savedGames.toSeq)
-
-  // Explictly subscribe to actually insert the name:
-  inObs.subscribe(new Observer[Completed] {
-
-    override def onNext(result: Completed): Unit = println("New Game Inserted")
-
-    override def onSubscribe ( subscription: Subscription ): Unit = {}
-
-    override def onError(e: Throwable): Unit = println("Failed to insert game: " + e.getLocalizedMessage)
-
-    override def onComplete(): Unit = println("Game insert successful")
-  })
 
 /*
   def loadGame(): Unit = {

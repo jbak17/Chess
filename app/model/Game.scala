@@ -15,16 +15,16 @@ package model
 
 
 import org.joda.time.DateTime
+import org.mongodb.scala.bson.collection.immutable.Document
 import services._
 
 case class testGame(white: String, black: String)
 
 case class Game (
-                  white: UserInstance,
-                  black: UserInstance,
-                  _id: Long = new java.util.Random().nextLong(),
-                  timeWhite: DateTime = new DateTime(),
-                  timeBlack: DateTime = new DateTime(),
+                  white: String,//use email addresses to represent users
+                  black: String,
+                  timeWhite: Long,
+                  timeBlack: Long,
                   currentBoard: List[ChessPiece] = Game.creatInitialBoard(),
                   moveHistory: List[String] = List(),
                   created: DateTime = DateTime.now()
@@ -32,6 +32,25 @@ case class Game (
   override def toString: String = s"Time remaining white: ${this.timeWhite}\n" +
     s"Time remaining black: ${this.timeWhite}\n" +
     s"Current board: ${currentBoard.toString()}"
+
+  def toBson(piece: ChessPiece): Document ={
+    Document("colour"->piece.colour.toString,
+      "col"->piece.location.C,
+      "row"->piece.location.R,
+      "type"->piece.kind,
+      "btime" -> timeBlack,
+      "wtime" -> timeWhite)
+  }
+
+  def currentBoardtoDocument: Document = {
+    val pieces: List[Document] = currentBoard.map(p => toBson(p))
+    Document("pieces"->pieces)
+  }
+
+    /*
+    for each pieces on the board, we want document format string->value
+     */
+
 }
 
 object Game {
