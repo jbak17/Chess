@@ -24,7 +24,7 @@ import services._
 case class Game (
                   white: String,//use email addresses to represent users
                   black: String,
-                  timeWhite: Long = 0,
+                  timeWhite: Long = 0, //milliseconds remaining
                   timeBlack: Long = 0,
                   currentBoard: List[ChessPiece] = Game.creatInitialBoard(),
                   moveHistory: List[String] = List(),

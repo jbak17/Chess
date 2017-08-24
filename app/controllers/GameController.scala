@@ -12,7 +12,7 @@ class GameController @Inject()(cc: ControllerComponents, messagesApi: MessagesAp
 
   def play = Action { implicit request =>
     val input: Html = Html.apply("<h1>This is where the game will go</h1>")
-    Ok(views.html.main("Game")(input))
+    Ok(views.html.gamePlay())
   }
 
 
