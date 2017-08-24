@@ -1,15 +1,18 @@
 @import controllers._
 
-@(gameForm: Form[gameData])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@(gameForm: Form[gameData])(implicit request: RequestHeader, messages: MessagesProvider)
 
 @import helper._
 
 @main(Messages("game.options")){
-    @helper.form(action = routes.AdminController.create()) {
-        @CSRF.formField                     @* <- takes a RequestHeader    *@
+    @helper.form(action = routes.AdminController.save()) {
         @helper.inputText(gameForm("player1")) @* <- takes a MessagesProvider *@
         @helper.inputText(gameForm("player2")) @* <- takes a MessagesProvider *@
         @helper.inputText(gameForm("startTime")) @* <- takes a MessagesProvider *@
         @helper.inputText(gameForm("increment"))  @* <- takes a MessagesProvider *@
+
+        <p><input type="submit" class="btn-primary" value='@Messages("game.new.submit")'></p>
     }
+
+
 }

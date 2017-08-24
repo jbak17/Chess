@@ -1,0 +1,20 @@
+
+@()(implicit messages: MessagesProvider)
+
+@main("Chess") {
+
+    <div id="reactRoot"></div>
+        <table>
+            <tr>
+                <td>Clock 1</td>
+                <td><canvas id="canvas" width="440" height="440"></canvas></td>
+                <td>Clock 2</td>
+            </tr>
+        </table>
+
+    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+    <script src="@routes.Assets.at("javascripts/chess.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/hello.js")" type="text/javascript"></script>
+
+}
+

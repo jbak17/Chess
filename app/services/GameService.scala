@@ -3,13 +3,13 @@ package services
 import javax.inject.{Inject, Singleton}
 
 import model.{Game, UserInstance}
-
 import org.mongodb.scala._
-
 import com.mongodb.async.client.{Observer, Subscription}
 import org.mongodb.scala.{Completed, Document}
 
+import scala.concurrent.Await
 import scala.language.postfixOps
+import scala.concurrent.duration._
 
 
 /*
@@ -21,6 +21,7 @@ turning game information into JSON.
 @Singleton
 class GameService @Inject () (mongoConnect: MongoConnect) {
 
+  var gamesList: Seq[Game] = Seq()
   //sample data for testing functions
   var savedGames: Set[Game]= Set(
     Game("juno@chess.com", "arnold@chess.com"),
@@ -33,10 +34,9 @@ class GameService @Inject () (mongoConnect: MongoConnect) {
     /*
   @brief Save a new game instance
    */
-  def saveGame(game: Game): Unit = {
+  def saveGame(game: Document): Unit = {
 
-    val newGame: Document = Document("white"->game.white, "black"->game.black, "board"->game.currentBoardtoDocument)
-    mongoConnect.gameCollection.insertOne(newGame).subscribe((C: Completed) => println("new game inserted"))
+    mongoConnect.gameCollection.insertOne(game).subscribe((C: Completed) => println("new game inserted"))
   }
 
 
@@ -44,23 +44,24 @@ class GameService @Inject () (mongoConnect: MongoConnect) {
   def loadGame(): Unit = {
     val observable = mongoConnect.gameCollection.find()
 
-    observable.subscribe( observer = new Observer[Game] {
+    observable.subscribe( observer = new Observer[Document] {
       override def onError(e: Throwable): Unit = {
         println ( "Game database error: " + e.getMessage )
       }
       override def onComplete(): Unit = {
         println ("Game found")
       }
-      override def onNext(result: Game): Unit = {
-        //todo make a default function for reuse
-      }
+      def onSubscribe(subscription: Subscription): Unit = ???
+      def onNext(result: Game): Unit = ???
+
     })
 
-    val results: Seq[Game] = Await.result ( observable.toFuture(), 3 seconds )
+    val results: Seq[Document] = Await.result ( observable.toFuture(), 3 seconds )
 
-    results.foreach(gameList.append(_))
+    //results.foreach(gamesList = gamesList + results)
   }
-*/
+  */
+
 
 /*
   @brief List all games sorted by the order in which they were created.
@@ -115,7 +116,7 @@ class GameService @Inject () (mongoConnect: MongoConnect) {
 
   def showGameByUser(user: UserInstance): List[Game] = {
 
-    savedGames.toList.filter( g => g.black == user || g.white == user)
+    savedGames.toList.filter( g => g.black == user.email || g.white == user.email)
 
   }
 

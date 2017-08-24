@@ -1,5 +1,5 @@
 
-# Chess application for COSC360
+# Chess application for COSC360 - Jarrod Baker
 
 This application was developed for COSC360. This readme is relevant for the first
 submission step focusing on backend development. 
@@ -20,16 +20,24 @@ game state sent to the client. I considered writing the game in JavaScript, but
 decided against it as this way if the connection is interrupted the game data is 
 preserved.
  
-Currently users can register, see their current games, and create a new game. Most of
-the backend is in place for the logic of the game. The early front end has been put
-together using bootstrap.
+Currently users can register, and create a new game instance in the database. Most of
+the backend is in place for the logic of the game: how the peices move
+and whatnot. The early front end has been put together using bootstrap.
 
 Moving forward: 
 I need to complete the frontend interface to the game, improve the visuals of the
 application, implement the web socket, and finish up the game logic to make sure
-that all the moves are legal, etc. 
+that all the moves are legal, etc. I also need to finish implementing returning
+a database instance of a game to an in memory version.
 
 I plan to use React and TypeScript for the client-side. 
+
+##challenges so far
+I have spent the most time trying to get the database working correctly.
+This is an ongoing struggle. 
+
+I expect the visuals will also prove challenging to implement as I do not 
+have any prior experience in this area. 
 
 ## The plumbing:
 
@@ -42,7 +50,8 @@ sbt run
 
 And then go to http://localhost:9000 to see the running web application.
 
-There are several demonstration files available in this template.
+There must be an instance of mongod available to connect to. So far this
+connection is hard-coded and not error checked, so please be careful.
 
 ## Controllers
 
@@ -55,6 +64,9 @@ There are several demonstration files available in this template.
   
 - AdminController.scala:
   Creates new game instances
+  
+- GameController.scala:
+    Will be used to run the game itself
 
 
 ## Components

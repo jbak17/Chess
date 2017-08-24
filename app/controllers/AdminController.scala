@@ -16,11 +16,13 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
+import model.Game
+import org.mongodb.scala.bson.collection.immutable.Document
 import services.GameService
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.MessagesApi
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.i18n.{Messages, MessagesApi}
+import play.api.mvc.{AbstractController, ControllerComponents, Flash}
 import play.twirl.api.Html
 
 case class gameData(player1: String, player2: String, startTime: Int, increment: Int)
@@ -45,10 +47,23 @@ class AdminController @Inject()(cc: ControllerComponents, messagesApi: MessagesA
   }
 
 
+
   def save = Action { implicit request =>
+    val newGame: Form[gameData] = gameForm.bindFromRequest()
 
-    Ok(views.html.index("Your new application is ready."))
-
+    newGame.fold(
+      hasErrors = {form =>
+        print("Problem with game options")
+        Redirect(routes.AdminController.create).flashing(Flash(form.data) + ("error" -> Messages("validation.game.errors")))
+      },
+      success = { newGame =>
+        val game: Game = new Game(newGame.player1, newGame.player2, newGame.startTime, newGame.increment)
+        val doc: Document = model.Game.gameToDocument(game)
+        Game.saveGame(doc)
+        Redirect(routes.GameController.play).
+          flashing("success" -> Messages("message"))
+      }
+    )
   }
 
   /*

@@ -27,6 +27,8 @@ POST     /games                     controllers.AdminController.save
 #   create a new game instance
 GET     /games/new                  controllers.AdminController.create
 
+GET     /play                       controllers.GameController.play
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

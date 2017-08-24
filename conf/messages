@@ -9,11 +9,14 @@ user.new.success = Successfully added user {0}
 user.find.error = User not found
 
 game.options = Select game options
+game.new.submit = Add game
 
 validation.user.errors = Please correct the errors in the form.
+validation.game.errors = Please correct the errors in the form.
 validation.email.duplicate = A user with this email already exists
 
 resources.jquery = https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
+resources.react = https://fb.me/react-0.13.3.min.js"
 resources.bootstrap = https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js
 resources.bootstrapcss = https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css
 

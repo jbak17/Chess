@@ -3,7 +3,7 @@ package services
 import com.google.inject.Singleton
 import javax.inject.Singleton
 
-import model.{Game, UserInstance, testGame}
+import model.{Game, UserInstance}
 import org.mongodb.scala.{Completed, Document, MongoClient, MongoCollection, MongoDatabase, Observable, Observer}
 import org.mongodb.scala.bson.codecs.Macros._
 import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY

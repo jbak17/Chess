@@ -5,13 +5,13 @@
 
 
 
-@main(Messages("newUser.form")){
-  <h2>@Messages("newUser.form")</h2>
+@main(Messages("user.form")){
+  <h2>@Messages("user.form")</h2>
 
   @form(routes.UserController.save()){
     <fieldset>
       <legend>
-      @Messages("products.userList", Messages("products.new"))
+      @Messages("name", Messages("email"))
       </legend>
       @inputText(userForm("name"))
       @inputText(userForm("email"))

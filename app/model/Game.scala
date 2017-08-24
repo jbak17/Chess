@@ -1,30 +1,31 @@
 /*
-  Includes:
+  Includes: This class will contain the logic for
+   keeping track of and representing the game. The logic
+   for the game itself is in GameService.
+
 
   Definitions:
       Game class for saving
 
   Methods to:
-      save a game instance
+      save a game instance as a Document
+      create a new board at the start of the game
 
 
  */
 
-
 package model
 
-
 import org.joda.time.DateTime
+import org.mongodb.scala.bson.{BsonDocument, BsonValue}
 import org.mongodb.scala.bson.collection.immutable.Document
 import services._
-
-case class testGame(white: String, black: String)
 
 case class Game (
                   white: String,//use email addresses to represent users
                   black: String,
-                  timeWhite: Long,
-                  timeBlack: Long,
+                  timeWhite: Long = 0,
+                  timeBlack: Long = 0,
                   currentBoard: List[ChessPiece] = Game.creatInitialBoard(),
                   moveHistory: List[String] = List(),
                   created: DateTime = DateTime.now()
@@ -37,19 +38,15 @@ case class Game (
     Document("colour"->piece.colour.toString,
       "col"->piece.location.C,
       "row"->piece.location.R,
-      "type"->piece.kind,
-      "btime" -> timeBlack,
-      "wtime" -> timeWhite)
+      "type"->piece.kind)
   }
 
-  def currentBoardtoDocument: Document = {
-    val pieces: List[Document] = currentBoard.map(p => toBson(p))
-    Document("pieces"->pieces)
-  }
+  /*
+  @brief return an array representation of the board. Each piece is a Document.
+   */
+  def currentBoardtoArray(board: List[ChessPiece]): Array[Document] = board.map(p => toBson(p)).toArray
 
-    /*
-    for each pieces on the board, we want document format string->value
-     */
+
 
 }
 
@@ -117,8 +114,33 @@ black and white pieces
   @para   move:
    */
   def recordMove(gameID: Long, move: Int): Unit = ???
+    //remove the old square from the game
+
+    //add the relevant move history
+
+    //create the new game instance with the updated piece list
+
+  def gameToDocument(game: Game): Document = {
+    val docs: Array[Document] = game.currentBoardtoArray(game.currentBoard)
+    Document("white"->game.white,
+      "black"->game.black,
+      "board"->docs.toSeq
+    )
+  }
 
 
+  /*
+  def documentToGame(document: Document): Game = {
+    val white: String = document.getString("white")
+    val black: String = document.getString("black")
+    val piecesBSON: List[BsonValue] = document.get("board").toList
+    val piecesDoc: List[BsonDocument] = piecesBSON.map(bson => bson.asDocument())
+    val pieces: List[ChessPiece] = piecesDoc.map( d => new Piece(
+      d.get("colour").toString)
+
+
+     //get pieces
+  }*/
 
 
 }

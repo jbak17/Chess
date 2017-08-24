@@ -15,7 +15,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href=@Messages("resources.bootstrapcss")>
         <script src=@Messages("resources.jquery")></script>
-    <script src=@Messages("resources.bootstrap")></script>
+        <script src=@Messages("resources.react")></script>
+        <script src=@Messages("resources.bootstrap")></script>
         <style>
                 /* Remove the navbar's default margin-bottom and rounded borders */
                 .navbar {
@@ -48,7 +49,7 @@
 
         <div class="container-fluid text-center">
             <div class="row content">
-                @tags.sideNav()
+                @tags.emptyCol()
                 <div class="col-sm-8 text-left">
                 @content
                 </div>
